@@ -1,46 +1,7 @@
-mapa = {}
-
-def crear_diccionario():
-  archivo = open('./es.txt')
-  palabras = archivo.read()
-  archivo.close()
-  diccionario = palabras.split("\n")
-  return [palabra for palabra in diccionario if "ñ" not in palabra]
+from utils import dividir_array, crear_diccionario
+from mapas import num_a_letra, letra_a_num
 
 diccionario = crear_diccionario()
-
-mapa['1a'] = {'0' : ['r'],
-              '1' : ['t','d'],
-              '2' : ['n'],
-              '3' : ['m'],
-              '4' : ['c', 'k', 'q'],
-              '5' : ['l'],
-              '6' : ['s','c'],
-              '7' : ['f','j'],
-              '8' : ['g','ch'],
-              '9' : ['p','b','v']
-            }
-
-mapa['a1'] = {'b' : '9',
-              'c' : '4',
-              'd' : '1',
-              'f' : '7',
-              'g' : '8',
-              'ch': '8',
-              'j' : '7',
-              'k' : '4',
-              'l' : '5',
-              'm' : '3',
-              'n' : '2',
-              'ñ' : '2',
-              'p' : '9',
-              'q' : '4',
-              'r' : '0',
-              's' : '6',
-              't' : '1',
-              'v' : '9',
-              'z' : '6'
-            }
 
 def letras_a_numeros(texto):
     resultado = []
@@ -53,28 +14,37 @@ def letras_a_numeros(texto):
           length = len(resultado)
           resultado[length - 1] = '8'
         ultimo_es_c = False;
-      if letra in mapa['a1']:
-        resultado.append(mapa['a1'][letra])
+      if letra in letra_a_num:
+        resultado.append(letra_a_num[letra])
     print(''.join(resultado))
-    
-def buscar_palabras(consonantes):
-  global diccionario
-  palabras = []
+
+def buscar_parcial(consonantes, diccionario):
+  palabras_aptas = []
   for palabra in diccionario:
-    valida = True
-    for lista_letra in consonantes:
-      for letra in lista_letra:
-        if letra not in palabra:
-          valida = False
-    if valida is True:
-      palabras.append(palabra)
-  print(palabras)
+    consonantes_palabra = [letra for letra in palabra if letra not in ['a', 'e', 'i', 'o', 'u']]
+    valida = True;
+    if len(consonantes_palabra) != len(consonantes):
+      valida = False
+      continue
+    for idx, cons_palabra in enumerate(consonantes_palabra):
+      if cons_palabra not in consonantes[idx]:
+        valida = False
+    if valida:
+      palabras_aptas.append(palabra)
+  return palabras_aptas
+    
+def buscar_palabras(consonantes, lista_palabras = []):
+  global diccionario
+  palabras = buscar_parcial(consonantes, diccionario)
+  if len(palabras):
+    lista_palabras.append(palabras[0])
     
 def numeros_a_frase(numeros):
   consonantes = []
   for numero in str(numeros):
-    consonantes.append(mapa['1a'][numero])
+    consonantes.append(num_a_letra[numero])
   palabras = buscar_palabras(consonantes)
+  print(palabras)
   return palabras
 
-numeros_a_frase(57)
+numeros_a_frase(37999385)
