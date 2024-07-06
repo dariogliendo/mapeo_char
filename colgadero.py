@@ -20,6 +20,7 @@ def letras_a_numeros(texto):
 
 def buscar_parcial(consonantes, diccionario):
   palabras_aptas = []
+  elegidas = []
   for palabra in diccionario:
     consonantes_palabra = [letra for letra in palabra if letra not in ['a', 'e', 'i', 'o', 'u']]
     valida = True;
@@ -31,14 +32,19 @@ def buscar_parcial(consonantes, diccionario):
         valida = False
     if valida:
       palabras_aptas.append(palabra)
-  return palabras_aptas
+  if (len(palabras_aptas) == 0):
+    mitades = dividir_array(consonantes, round(len(consonantes) / 2))
+    elegidas.extend(buscar_parcial(mitades[0], diccionario))
+    elegidas.extend(buscar_parcial(mitades[1], diccionario))
+  else:
+    elegidas.append(palabras_aptas[0])
+  return elegidas
+    
     
 def buscar_palabras(consonantes, lista_palabras = []):
   global diccionario
-  palabras = buscar_parcial(consonantes, diccionario)
-  if len(palabras):
-    lista_palabras.append(palabras[0])
-    
+  return buscar_parcial(consonantes, diccionario)
+
 def numeros_a_frase(numeros):
   consonantes = []
   for numero in str(numeros):
@@ -47,4 +53,5 @@ def numeros_a_frase(numeros):
   print(palabras)
   return palabras
 
-numeros_a_frase(37999385)
+numeros_a_frase(39453217)
+print(letras_a_numeros("imbecil mondejo"))
