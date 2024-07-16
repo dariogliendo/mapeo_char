@@ -1,7 +1,7 @@
 from utils import dividir_array, crear_diccionario
 from mapas import num_a_letra, letra_a_num
 
-diccionario = crear_diccionario()
+diccionario = crear_diccionario("./coso.txt")
 
 def letras_a_numeros(texto):
     resultado = []
@@ -18,7 +18,7 @@ def letras_a_numeros(texto):
         resultado.append(letra_a_num[letra])
     print(''.join(resultado))
 
-def buscar_parcial(consonantes, diccionario):
+def buscar_palabras(consonantes, diccionario):
   palabras_aptas = []
   elegidas = []
   for palabra in diccionario:
@@ -34,24 +34,19 @@ def buscar_parcial(consonantes, diccionario):
       palabras_aptas.append(palabra)
   if (len(palabras_aptas) == 0):
     mitades = dividir_array(consonantes, round(len(consonantes) / 2))
-    elegidas.extend(buscar_parcial(mitades[0], diccionario))
-    elegidas.extend(buscar_parcial(mitades[1], diccionario))
+    elegidas.extend(buscar_palabras(mitades[0], diccionario))
+    elegidas.extend(buscar_palabras(mitades[1], diccionario))
   else:
     elegidas.append(palabras_aptas[0])
   return elegidas
-    
-    
-def buscar_palabras(consonantes, lista_palabras = []):
-  global diccionario
-  return buscar_parcial(consonantes, diccionario)
 
 def numeros_a_frase(numeros):
+  global diccionario
   consonantes = []
   for numero in str(numeros):
     consonantes.append(num_a_letra[numero])
-  palabras = buscar_palabras(consonantes)
-  print(palabras)
+  palabras = buscar_palabras(consonantes, diccionario)
   return palabras
 
-numeros_a_frase(39453217)
+print(numeros_a_frase(6559932123121858399))
 print(letras_a_numeros("imbecil mondejo"))
